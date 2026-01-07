@@ -1,0 +1,16 @@
+Model: einsum_fail.onnx
+TensorRT Version: 8.6
+
+Node: Einsum_0
+Status: rewrite_supported
+
+Why it fails:
+- Einsum is not natively supported by TensorRT
+
+Prevention:
+- Can be rewritten as batched MatMul
+
+Suggested fixes:
+1. Rewrite Einsum → MatMul (recommended)
+2. Write TensorRT plugin (medium effort)
+3. Fallback to ONNX Runtime

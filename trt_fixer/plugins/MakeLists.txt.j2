@@ -1,0 +1,22 @@
+cmake_minimum_required(VERSION 3.10)
+project({{ plugin_name }}Plugin)
+
+find_package(CUDA REQUIRED)
+
+include_directories(
+    ${CUDA_INCLUDE_DIRS}
+    $ENV{TENSORRT_HOME}/include
+)
+
+link_directories(
+    $ENV{TENSORRT_HOME}/lib
+)
+
+add_library({{ plugin_name }}Plugin SHARED
+    {{ plugin_name }}Plugin.cpp
+)
+
+target_link_libraries({{ plugin_name }}Plugin
+    nvinfer
+    cuda
+)

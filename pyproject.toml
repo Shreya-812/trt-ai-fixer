@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trt-ai-fixer"
+version = "0.1.0"
+description = "AI-assisted TensorRT compatibility fixer"
+readme = "README.md"
+requires-python = ">=3.9"
+
+# Runtime dependencies
+dependencies = [
+  "onnx>=1.14",
+]
+
+# Optional dependencies
+[project.optional-dependencies]
+test = [
+  "pytest>=8.0",
+  "onnxruntime>=1.16",
+]
+
+# CLI entry point
+[project.scripts]
+trt-fix = "trt_fixer.cli:main"
+
+# Package discovery
+[tool.setuptools.packages.find]
+where = ["."]

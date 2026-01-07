@@ -1,0 +1,30 @@
+{
+  "TensorRT-8.6": {
+    "native_ops": [
+      "Conv",
+      "MatMul",
+      "Gemm",
+      "Relu",
+      "Add",
+      "Mul",
+      "BatchNormalization",
+      "Reshape",
+      "Transpose",
+      "ReduceSum",
+      "Softmax"
+    ],
+    "rewrite_supported": [
+      "Einsum",
+      "GroupNormalization"
+    ],
+    "plugin_required": [
+      "LayerNormalization",
+      "NonMaxSuppression"
+    ],
+    "blocked": [
+      "Scan",
+      "SequenceInsert",
+      "Loop"
+    ]
+  }
+}

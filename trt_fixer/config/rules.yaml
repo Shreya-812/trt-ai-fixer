@@ -1,0 +1,23 @@
+einsum:
+  rewrite_patterns:
+    - equation: "ij,jk->ik"
+      strategy: "matmul"
+      safe: true
+
+    - equation: "bij,bjk->bik"
+      strategy: "batched_matmul"
+      safe: true
+
+    - equation: "*"
+      strategy: "plugin"
+      safe: false
+
+precision_fixes:
+  force_fp32:
+    - LayerNormalization
+    - ReduceMean
+
+shape_rules:
+  dynamic_axes_blocked:
+    - Einsum
+    - Loop

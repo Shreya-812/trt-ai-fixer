@@ -1,0 +1,95 @@
+#include "{{ plugin_name }}Plugin.h"
+#include <cuda_runtime.h>
+#include <cstring>
+
+using namespace nvinfer1;
+
+{{ plugin_name }}Plugin::{{ plugin_name }}Plugin(const std::string& name)
+    : mLayerName(name) {}
+
+{{ plugin_name }}Plugin::{{ plugin_name }}Plugin(const void* data, size_t length) {
+    const char* d = reinterpret_cast<const char*>(data);
+    mLayerName.assign(d, d + length);
+}
+
+const char* {{ plugin_name }}Plugin::getPluginType() const noexcept {
+    return "{{ plugin_name }}Plugin";
+}
+
+const char* {{ plugin_name }}Plugin::getPluginVersion() const noexcept {
+    return "1";
+}
+
+int {{ plugin_name }}Plugin::getNbOutputs() const noexcept {
+    return 1;
+}
+
+DimsExprs {{ plugin_name }}Plugin::getOutputDimensions(
+    int,
+    const DimsExprs* inputs,
+    int,
+    IExprBuilder&) noexcept {
+    return inputs[0];
+}
+
+bool {{ plugin_name }}Plugin::supportsFormatCombination(
+    int pos,
+    const PluginTensorDesc* inOut,
+    int,
+    int) noexcept {
+    return inOut[pos].format == TensorFormat::kLINEAR &&
+           inOut[pos].type == DataType::kFLOAT;
+}
+
+void {{ plugin_name }}Plugin::configurePlugin(
+    const DynamicPluginTensorDesc*,
+    int,
+    const DynamicPluginTensorDesc*,
+    int) noexcept {}
+
+size_t {{ plugin_name }}Plugin::getWorkspaceSize(
+    const PluginTensorDesc*,
+    int,
+    const PluginTensorDesc*,
+    int) const noexcept {
+    return 0;
+}
+
+int {{ plugin_name }}Plugin::enqueue(
+    const PluginTensorDesc*,
+    const PluginTensorDesc*,
+    const void* const* inputs,
+    void* const* outputs,
+    void*,
+    cudaStream_t stream) noexcept {
+
+    // TODO: launch CUDA kernel
+    cudaMemcpyAsync(outputs[0], inputs[0],
+                    /* bytes */ 0,
+                    cudaMemcpyDeviceToDevice,
+                    stream);
+    return 0;
+}
+
+size_t {{ plugin_name }}Plugin::getSerializationSize() const noexcept {
+    return mLayerName.size();
+}
+
+void {{ plugin_name }}Plugin::serialize(void* buffer) const noexcept {
+    memcpy(buffer, mLayerName.data(), mLayerName.size());
+}
+
+void {{ plugin_name }}Plugin::destroy() noexcept {
+    delete this;
+}
+
+IPluginV2DynamicExt* {{ plugin_name }}Plugin::clone() const noexcept {
+    return new {{ plugin_name }}Plugin(mLayerName);
+}
+
+DataType {{ plugin_name }}Plugin::getOutputDataType(
+    int,
+    const DataType* inputTypes,
+    int) const noexcept {
+    return inputTypes[0];
+}
